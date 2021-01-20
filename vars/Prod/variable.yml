@@ -1,0 +1,2 @@
+env: Prod
+replicacount: 4

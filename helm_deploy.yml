@@ -1,0 +1,24 @@
+---
+- name: helm deploy 
+  hosts: localhost
+  tasks:
+    - name: "ensure charts staging folder is cleaned"
+      file:
+        path: "/tmp/work"
+        state: absent
+    - name: "ensure charts staging folder is created"
+      file:
+        path: "/tmp/work"
+        state: directory
+    - name: "clone chart"
+      git:
+        repo: https://github.com/DeekshithSN/application_helm.git
+        dest: /tmp/work
+    - name: "load all variables"
+      include_vars:
+        dir: "vars/{{ env }}"
+    - name: "template values.yaml"
+      template:
+        src: "templates/{{ env }}/values.yml"
+        dest: "/tmp/work/values.yaml"
+

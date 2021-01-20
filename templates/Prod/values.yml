@@ -1,0 +1,51 @@
+                                                                                                                  
+app:
+  namespace: 
+  name: 
+  replicaCount: {{ vars['replicacount'] }}
+  resources:
+    requests:
+      cpu: 2
+      memory: 1Gi
+    limits:
+      cpu: 2
+      memory: 1Gi
+  scheme: HTTP
+  livenessProbe:
+    command: "ps -ef | grep java | grep -v grep"
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+  readinessProbe:
+    path: "/application/healthCheck/node"
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 24
+    successThreshold: 1
+
+images:
+  tags:
+    image: busybox
+
+conf:
+  env: {{ vars['env'] }}
+  password: {{ vars['dbpassword'] }}
+  datacenter: BLR
+  server_port: 8080
+  application_name: my_application 
+  application:
+    server_ssl_enabled: false
+    server_ssl_ciphers: test
+    application_code_send_attempts: 1
+    application_code_re-send_attempts: 2
+    application_pin_retry_validation_attempts: 8
+    ratelimit_expirymap_CTN_count: 2
+    ratelimit_expirymap_CTN.TTL: 1440
+    iCloudHeader_Content-Type=application/json; charset: UTF-8
+    
+  logback:
+    logback_rolling_file_max_size: 100MB
+    logback_file_max_history: 30
